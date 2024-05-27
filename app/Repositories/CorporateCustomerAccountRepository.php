@@ -34,11 +34,11 @@ class CorporateCustomerAccountRepository
             $comp_doc_name2 = null;
             $comp_logo_file_name = null;
             if( !empty($data['document_name1']) ){
-                $file_stored = $this->saveFile($data['document_name1'], 'msisnd/'.$data['msisdn'], $data['document_file_name1']);
+                $file_stored = $this->saveFile($data['document_name1'], 'msisnd/'.$account->phone_number, $data['document_file_name1']);
             }if( !empty($data['document_name2']) ){
-                $comp_doc_name2 = $this->saveFile($data['document_name2'], 'msisnd/'.$data['msisdn'], $data['document_file_name2']);
+                $comp_doc_name2 = $this->saveFile($data['document_name2'], 'msisnd/'.$account->phone_number, $data['document_file_name2']);
             }if( !empty($data['comp_logo_file_name']) ){
-                $comp_logo_file_name = $this->saveFile($data['comp_logo_file_name'], 'msisnd/'.$data['msisdn'], 'comp_logo');
+                $comp_logo_file_name = $this->saveFile($data['comp_logo_file_name'], 'msisnd/'.$account->phone_number, 'comp_logo');
             }
             $account->phone_number = $data['msisdn'] ?? $account->phone_number;
             $account->comp_name = $data['company_name'] ?? $account->comp_name;
@@ -70,7 +70,7 @@ class CorporateCustomerAccountRepository
                 ? Auth::guard('admin')->user()->id : $account->doc_approval_status;
             $account->doc_approval_comments = $data['doc_approval_comments'] ?? $account->doc_approval_comments;
             $account->username = $data['username'] ?? $account->username;
-            $account->password = Hash::make($data['password']) ?? $account->password;
+            $account->password = isset($data['password']) ? Hash::make($data['password']) : $account->password;
             $account->passwd_change_date = isset($data['password']) ? Carbon::now() : $account->passwd_change_date;
             $account->passwd_change_date = isset($data['password']) ? Carbon::now() : $account->passwd_change_date;
             $account->user_lang = $data['user_lang'] ?? $account->user_lang;
