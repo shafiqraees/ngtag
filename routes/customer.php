@@ -17,10 +17,12 @@ Route::middleware([/*'auth:token',*/'throttle:10,1'])->group(function () {
     Route::prefix('auth')->group(function () {
         Route::post('register', [AuthController::class, 'register']);
         Route::post('login', [AuthController::class, 'login']);
+        Route::post('very/accounts', [AuthController::class, 'verifyAccounts']);
     });
     Route::middleware('auth:corp_customer_accounts')->group(function (){
         Route::put('updatecustomer/{customer_account_id}', [CorpCustomerAccountController::class, 'update']);
         Route::post('buy/tags', [CorpCustomerAccountController::class, 'buyReserveTags']);
+        Route::get('tagnumber/detail/{tag_id}', [CorpCustomerAccountController::class, 'getTagDetail']);
     });
 
 });

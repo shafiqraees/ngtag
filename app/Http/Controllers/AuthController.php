@@ -55,8 +55,6 @@ class AuthController extends Controller
     }
 
 
-
-
     /**
      * Update the specified resource in storage.
      */
@@ -65,6 +63,16 @@ class AuthController extends Controller
         try {
             return (CorporateUserRegisterResource::make($this->authRepository->uodateCorporateCustomer($request->all()))
                 ->additional(['response_status' => "success", 'response_code' => "00",'success' => true,'message' => 'User registered Successfully']));
+        } catch (\Exception $exception) {
+            report($exception);
+            return $this->apiResponse('error',JsonResponse::HTTP_INTERNAL_SERVER_ERROR,false,$exception->getMessage(), 'data', null);
+        }
+    }
+    public function verifyAccounts(StoreCorpCustomerAccountRequest $request)
+    {
+        try {
+            return (CorporateUserRegisterResource::make($request->all())
+                ->additional(['response_status' => "success", 'response_code' => "00",'success' => true,'message' => 'Available for use']));
         } catch (\Exception $exception) {
             report($exception);
             return $this->apiResponse('error',JsonResponse::HTTP_INTERNAL_SERVER_ERROR,false,$exception->getMessage(), 'data', null);

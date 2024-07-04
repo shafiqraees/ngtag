@@ -25,27 +25,13 @@ class StoreCorpCustomerAccountRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'channel' => 'required|string|max:10',
-            'msisdn' => 'required|string|unique:corp_customer_accounts,phone_number',
-            'account_id' => 'required|string|unique:corp_customer_accounts,username',
-            'company_name' => 'required|string|unique:corp_customer_accounts,comp_name',
-            'comp_industry' => 'nullable|string',
-            'comp_state' => 'nullable|string',
-            'comp_city' => 'nullable|string',
-            'comp_country' => 'nullable|string',
-            'comp_addr' => 'nullable|string',
-            'comp_reg_no' => 'nullable|string|unique:corp_customer_accounts,comp_reg_no',
+            'phone_number' => 'sometimes|string|unique:corp_customer_accounts,phone_number',
+            'username' => 'sometimes|string|unique:corp_customer_accounts,username',
+            'email' => 'sometimes|string|unique:corp_customer_accounts,email',
+            'company_name' => 'sometimes|string|unique:corp_customer_accounts,comp_name',
+            'comp_reg_no' => 'sometimes|string|unique:corp_customer_accounts,comp_reg_no',
             //'ntn' => 'required_unless:comp_reg_no,null|digits_between:5,30|unique:corp_customer_accounts,ntn',
-            'ntn' => 'nullable|string|unique:corp_customer_accounts,ntn',
-            'contactf_name' => 'nullable|string',
-            'contactl_name' => 'nullable|string',
-            'email' => 'nullable|string',
-            'contact_no' => 'nullable|numeric',
-            'other_info' => 'nullable|string',
-            'document_name1' => 'nullable|string',
-            'document_file_name1' => 'nullable|string',
-            'document_name2' => 'nullable|string',
-            'document_file_name2' => 'nullable|string',
+            'ntn' => 'sometimes|string|unique:corp_customer_accounts,ntn',
         ];
 
     }

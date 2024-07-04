@@ -20,6 +20,8 @@ return new class extends Migration
             $table->tinyInteger('user_type')->unsigned()->comment('1=corporate, 2=normal');
             $table->dateTime('created_at')->default(now());
             $table->dateTime('listen_date')->nullable();
+            $table->dateTime('start_date')->nullable()->comment('end date');
+            $table->dateTime('end_date')->nullable()->comment('start date ');
             $table->tinyInteger('status')->nullable()->comment('0 = pending, 1=listen, 2=expire');
             $table->softDeletes();
 
