@@ -36,7 +36,7 @@ class AuthRepository
             }
             $user =  CorpCustomerAccount::create([
                 'customer_account_id' => Str::uuid()->toString(),
-                'phone_number' => $data['msisdn'],
+                'phone_number' => $data['phone_number'],
                 'password' => isset($data['password'])
                     ? Hash::make($data['password'])
                     : Hash::make(config('app.default_password')),

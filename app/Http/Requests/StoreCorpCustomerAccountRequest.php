@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\OTPType;
+use App\Rules\OTPVerificationRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
@@ -34,17 +36,8 @@ class StoreCorpCustomerAccountRequest extends FormRequest
             'comp_reg_no' => 'sometimes|string|unique:corp_customer_accounts,comp_reg_no',
             //'ntn' => 'required_unless:comp_reg_no,null|digits_between:5,30|unique:corp_customer_accounts,ntn',
             'ntn' => 'sometimes|string|unique:corp_customer_accounts,ntn',
-            //'otp_id' => 'required|string|exists:otp_processes,otp_id',
-            //'otp_code' => 'required|integer|digits:4|exists:otp_processes,otp_code',
-            'otp_code' => [
-                'required',
-                'integer',
-                'digits:4',
-                Rule::exists('otp_processes')->where(function (Builder $query) {
-                    return $query->where('status', 1)->where('status', 0) // Only pending OTPs can be verified
-                    ->where('expiration_time', '>', now());
-                }),
-            ],
+            'otp_id' => 'required|string|exists:otp_processes,otp_id',
+            'otp_code' => ['required', 'integer', 'digits:4', 'exists:otp_processes,otp_code', new OTPVerificationRule()],
         ];
 
     }
