@@ -22,7 +22,7 @@ class OtpProcessRepository
                 'msisdn' => $data['msisdn'],
                 'otp_type' => $data['otp_type'],
                 'channel' => $data['channel'],
-                'expiration_time' => now()->addMinute(),
+                'expiration_time' => now()->addMinutes(5),
                 'status' => 0, // pending
             ]);
 

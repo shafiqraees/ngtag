@@ -26,7 +26,7 @@ class CorporateTagRepository
         try {
 
             $limit = request()->get('limit', config('cache.per_page'));
-            return CorpTagList::paginate($limit);
+            return CorpTagList::filter($filters)->paginate($limit);
             if (!empty($filters) && $filters->hasFilters()) {
                 return CorpTagList::paginate($limit);
             }

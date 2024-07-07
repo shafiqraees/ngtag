@@ -29,7 +29,7 @@ class CorpCustomerAccountController extends Controller
     {
         try {
             return (CorporateUserRegisterResource::make($this->corporateCustomerAccountRepository->buyOrReserveTagNumber($request->all()))
-                ->additional(['response_status' => "success", 'response_code' => "00",'success' => true,'message' => 'Account updated successfully']));
+                ->additional(['response_status' => "success", 'response_code' => "00",'success' => true,'message' => 'You have successfully reserve number']));
         } catch (\Exception $exception) {
             report($exception);
             return $this->apiResponse('error',JsonResponse::HTTP_INTERNAL_SERVER_ERROR,false,$exception->getMessage(), 'data', null);

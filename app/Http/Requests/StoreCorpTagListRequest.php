@@ -36,7 +36,8 @@ class StoreCorpTagListRequest extends FormRequest
             'transaction_type' => 'sometimes|string',
             'transaction_id' => 'sometimes|string',
             'transmission_date_time' => 'sometimes|string',
-            'msisdn' => 'required|string|exists:corp_customer_accounts,phone_number',
+            'phone_number' => 'required|string|exists:corp_customer_accounts,phone_number',
+            //'msisdn' => 'required|string|exists:corp_customer_accounts,phone_number',
             'account_id' => 'required|string|exists:corp_customer_accounts,customer_account_id',
             //'customer_tag_id' => 'required|string|exists:corp_tag_lists,customer_tag_id',
             'id' => [
@@ -45,7 +46,7 @@ class StoreCorpTagListRequest extends FormRequest
                     return $query->where('status', 1);
                 }),
             ],
-            'mobile_no' => 'required|string',
+            'msisdn' => 'required|string',
             'reserve_type' => 'required|string',
         ];
     }

@@ -51,6 +51,7 @@ class Handler extends ExceptionHandler
             return response()->json([
                 'message' => method_exists($model, 'notFoundMessage') ? $model->notFoundMessage() : $this->ModelNotFoundExceptionResponse(),
                 'success' => false,
+                'response_status' => "error",
                 'status_code' => Response::HTTP_NOT_FOUND
             ], Response::HTTP_NOT_FOUND);
         }
@@ -58,6 +59,7 @@ class Handler extends ExceptionHandler
             return response()->json([
                 'message' => __('response_messages.route_not_found'),
                 'success' => false,
+                'response_status' => "error",
                 'status_code' => Response::HTTP_NOT_FOUND
             ], Response::HTTP_NOT_FOUND);
         }
@@ -65,6 +67,7 @@ class Handler extends ExceptionHandler
             return response()->json([
                 'message' => __('response_messages.method_not_found'),
                 'success' => false,
+                'response_status' => "error",
                 'status_code' => Response::HTTP_NOT_FOUND
             ], Response::HTTP_NOT_FOUND);
         }
@@ -72,6 +75,7 @@ class Handler extends ExceptionHandler
             return response()->json([
                 'message' => __('response_messages.method_not_allowed'),
                 'success' => false,
+                'response_status' => "error",
                 'status_code' => Response::HTTP_METHOD_NOT_ALLOWED
             ], Response::HTTP_METHOD_NOT_ALLOWED);
         }
@@ -79,6 +83,7 @@ class Handler extends ExceptionHandler
             return response()->json([
                 'message' => __('response_messages.not_found'),
                 'success' => false,
+                'response_status' => "error",
                 'status_code' => Response::HTTP_NOT_FOUND
             ], Response::HTTP_NOT_FOUND);
         }
@@ -86,6 +91,7 @@ class Handler extends ExceptionHandler
             return response()->json([
                 'message' => __('response_messages.unauthorized'),
                 'success' => false,
+                'response_status' => "error",
                 'status_code' => Response::HTTP_UNAUTHORIZED
             ], Response::HTTP_UNAUTHORIZED);
         }
@@ -93,6 +99,7 @@ class Handler extends ExceptionHandler
             return response()->json([
                 'message' => __('response_messages.too_many_request'),
                 'success' => false,
+                'response_status' => "error",
                 'status_code' => Response::HTTP_TOO_MANY_REQUESTS
             ], Response::HTTP_TOO_MANY_REQUESTS);
         }

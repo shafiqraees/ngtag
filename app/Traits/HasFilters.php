@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-class HasFilters
+trait HasFilters
 {
     public function scopeFilter($builder, $filters, $used_as = 'object'){
         if( !empty($filters) ) {

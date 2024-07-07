@@ -83,6 +83,7 @@ class OtpProcessController extends Controller
     {
         try {
             $data = $this->otpProcessRepository->verifyOtp($request->all());
+
             if ($data) {
                 return (OtpVerifyResource::make($data)
                     ->additional(['response_status' => "success", 'response_code' => "00",'success' => true,'message' => 'OTP verified successfully']));

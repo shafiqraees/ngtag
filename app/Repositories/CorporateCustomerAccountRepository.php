@@ -2,6 +2,8 @@
 
 namespace App\Repositories;
 
+use App\Enums\CorpCustomerAccountStatusEnum;
+use App\Enums\CorpReserveTagStatusEnum;
 use App\Filters\QueryFilterBase;
 use App\Models\AdminPortal;
 use App\Models\CorpCustomerAccount;
@@ -86,26 +88,33 @@ class CorporateCustomerAccountRepository
         }
     }
     public function buyOrReserveTagNumber(array $data) {
-
         try {
             DB::beginTransaction();
+            $cor_account = CorpCustomerAccount::where('customer_account_id',$data['account_id'])->first();
+            $status = CorpReserveTagStatusEnum::RESERVE_DUE_TO_DOCUMENTS->value;
+            if ($cor_account->doc_approval_status == 1 && isset($data['payment_method']) && $cor_account->status == 1)  {
+                $status = CorpReserveTagStatusEnum::BUY->value;
+            } elseif ($cor_account->doc_approval_status != 1 && isset($data['payment_method']) && $cor_account->status == 1) {
+                $status = CorpReserveTagStatusEnum::RESERVE_DUE_TO_DOCUMENTS->value;
+            }elseif ($cor_account->doc_approval_status != 1 && isset($data['payment_method']) && $cor_account->status != 1) {
+                $status = CorpReserveTagStatusEnum::BLOCKED_BY_ADMIN->value;
+            }
+            //TODO add Payment Service here which return payment details for now assume payment is done
             $corp_rserve_buy_tags =  CorpReserveTag::create([
-                'corp_customer_account_id' => Auth::guard('corp_customer_accounts')->user()->getAuthIdentifier()
-                    ?? CorpCustomerAccount::where('customer_account_id',$data['account_id'])->first()->id,
-                'phone_number' => $data['mobile_no'] ?? null,
-                'msisdn' => $data['mobile_no'] ?? null,
+                'corp_customer_account_id' => $cor_account->id,
+                'phone_number' => $data['phone_number'] ?? null,
+                'msisdn' => $data['msisdn'] ?? null,
                 'corp_tag_list_id' => $data['customer_tag_id'],
                 'payment_method' => $data['payment_method'] ?? null,
-                //'payment_status' => $data['payment_status'] ?? null,
-                //'payment_date' => $data['comp_state'] ?? null,
+                'payment_status' => $data['payment_method'] ? 1 : 0, //0=pending for payment, 1=payment success, 2=Payment Failed, 3=expired payment timeline
+                'payment_date' => isset($data['payment_method']) ?Carbon::now() : null ,
                 'expiry_date' => Carbon::now()->addHours(24) ?? null,
-                'status' => isset($data['payment_method']) ? 3 : 0, //0=resver due to documents, 2=buy, 1=active, 3=pending for payment, 4=expired_docs, 5=expird_payment, 6= blockby admin
+                'status' => $status, //0=reserve due to documents, 2=buy, 1=active, 3=pending for payment, 4=expired_docs, 5=expired_payment, 6= blockby admin
                 //'status_update_date' => $data['comp_addr'] ?? null,
             ]);
             $corp_tag_list = CorpTagList::find($data['customer_tag_id']);
             $corp_tag_list->status = 3; //1=available, 2=sold, 3=reserved, 4=
             $corp_tag_list->save();
-
             DB::commit();
             return $corp_rserve_buy_tags;
         } catch (\Exception $exception ) {

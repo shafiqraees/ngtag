@@ -27,7 +27,7 @@ class StoreOtpProcessRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'msisdn' => 'required|digits_between:10,15',
+            'msisdn' => 'required|string|max:16',
             'otp_type' => 'required|string|max:6',
             'channel' => 'required|string|max:10',
             'transaction_type' => 'required|string|max:20',
