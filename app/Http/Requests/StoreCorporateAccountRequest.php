@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\OTPVerificationRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -26,7 +27,7 @@ class StoreCorporateAccountRequest extends FormRequest
     {
         return [
             'channel' => 'required|string|max:10',
-            'msisdn' => 'required|string|unique:corp_customer_accounts,phone_number',
+            'phone_number' => 'required|string|unique:corp_customer_accounts,phone_number',
             'account_id' => 'required|string|unique:corp_customer_accounts,username',
             'company_name' => 'required|string|unique:corp_customer_accounts,comp_name',
             'comp_industry' => 'nullable|string',
@@ -39,13 +40,15 @@ class StoreCorporateAccountRequest extends FormRequest
             'ntn' => 'nullable|string|unique:corp_customer_accounts,ntn',
             'contactf_name' => 'nullable|string',
             'contactl_name' => 'nullable|string',
-            'email' => 'nullable|string',
+            'email' => 'nullable|sometimes|email|unique:corp_customer_accounts,email',
             'contact_no' => 'nullable|numeric',
             'other_info' => 'nullable|string',
             'document_name1' => 'nullable|string',
             'document_file_name1' => 'nullable|string',
             'document_name2' => 'nullable|string',
             'document_file_name2' => 'nullable|string',
+            'otp_id' => 'required|string|exists:otp_processes,otp_id',
+            'otp_code' => ['required', 'integer', 'digits:4', 'exists:otp_processes,otp_code', new OTPVerificationRule()],
         ];
 
     }

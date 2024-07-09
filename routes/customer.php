@@ -9,7 +9,7 @@ use App\Http\Controllers\VoiceMailController;
 
 
 
-Route::middleware([/*'auth:token',*/'throttle:10,1'])->group(function () {
+Route::middleware([/*'auth:token','throttle:10,1'*/])->group(function () {
     Route::post('generateotp', [OtpProcessController::class, 'store']);
     Route::post('verifyotp', [OtpProcessController::class, 'verifyOtp']);
     Route::prefix('auth')->group(function () {
@@ -22,6 +22,7 @@ Route::middleware([/*'auth:token',*/'throttle:10,1'])->group(function () {
             'corptaglist' => CorpTagListController::class,
             'voicemail' => VoiceMailController::class,
         ]);
+        Route::get('check-documents/{customer_account_id}', [CorpCustomerAccountController::class, 'checkDocumentsVerification']);
         Route::put('updatecustomer/{customer_account_id}', [CorpCustomerAccountController::class, 'update']);
         Route::post('buy/tags', [CorpCustomerAccountController::class, 'buyReserveTags']);
         Route::get('tagnumber/detail/{tag_id}', [CorpCustomerAccountController::class, 'getTagDetail']);

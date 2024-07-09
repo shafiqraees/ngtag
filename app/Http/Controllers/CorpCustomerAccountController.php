@@ -59,5 +59,15 @@ class CorpCustomerAccountController extends Controller
             return $this->apiResponse('error',JsonResponse::HTTP_INTERNAL_SERVER_ERROR,false,$exception->getMessage(), 'data', null);
         }
     }
+    public function checkDocumentsVerification(CorpCustomerAccount $customer_account_id)
+    {
+        try {
+            return (CorporateUserRegisterResource::make($customer_account_id))
+                ->additional(['response_status' => "success", 'response_code' => "00",'success' => true,'message' => 'Documents verification']);
+        } catch (\Exception $exception) {
+            report($exception);
+            return $this->apiResponse('error',JsonResponse::HTTP_INTERNAL_SERVER_ERROR,false,$exception->getMessage(), 'data', null);
+        }
+    }
 
 }

@@ -31,13 +31,11 @@ class StoreCorpCustomerAccountRequest extends FormRequest
         return [
             'phone_number' => 'sometimes|string|unique:corp_customer_accounts,phone_number',
             'username' => 'sometimes|string|unique:corp_customer_accounts,username',
-            'email' => 'sometimes|string|unique:corp_customer_accounts,email',
+            'email' => 'sometimes|email|unique:corp_customer_accounts,email',
             'company_name' => 'sometimes|string|unique:corp_customer_accounts,comp_name',
             'comp_reg_no' => 'sometimes|string|unique:corp_customer_accounts,comp_reg_no',
             //'ntn' => 'required_unless:comp_reg_no,null|digits_between:5,30|unique:corp_customer_accounts,ntn',
             'ntn' => 'sometimes|string|unique:corp_customer_accounts,ntn',
-            'otp_id' => 'required|string|exists:otp_processes,otp_id',
-            'otp_code' => ['required', 'integer', 'digits:4', 'exists:otp_processes,otp_code', new OTPVerificationRule()],
         ];
 
     }

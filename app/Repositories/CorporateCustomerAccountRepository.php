@@ -164,4 +164,8 @@ class CorporateCustomerAccountRepository
             throw $exception;
         }
     }
+
+    public function getCorpCustomerAccount() {
+
+    }
 }

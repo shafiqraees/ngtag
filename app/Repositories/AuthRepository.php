@@ -61,8 +61,10 @@ class AuthRepository
                 'channel' => $data['channel'] ?? null,
             ]);
             //$token = $user->createToken('Customer', ['corporate-users'])->accessToken;
-            $token = $user->createToken('corp_customer_accounts')->accessToken;
-            $user->token = $token;
+            $tokenResult = $user->createToken('corp_customer_accounts');
+            $tokenResult->token->expires_at = now()->addHours(config('auth.token_expiration.corp_customer'));
+            $tokenResult->token->save();
+            $user->token = $tokenResult->accessToken;
             return $user;
         } catch (\Exception $exception ) {
             DB::rollBack();
@@ -81,8 +83,10 @@ class AuthRepository
                 throw new \Exception("Account block due to wrong password attempt");
             }
             if( $user && Hash::check($data['password'], $user->password) ) {
-                $token = $user->createToken('corp_customer_accounts')->accessToken;
-                $user->token = $token;
+                $tokenResult = $user->createToken('corp_customer_accounts');
+                $tokenResult->token->expires_at = now()->addHours(config('auth.token_expiration.corp_customer'));
+                $tokenResult->token->save();
+                $user->token = $tokenResult->accessToken;
                 return $user;
             } else {
                 $user->login_attempts +=1;
@@ -97,11 +101,13 @@ class AuthRepository
     public function adminLogin(array $data)
     {
         try {
-            $user = AdminPortal::whereUsername($data['username'])->first();
-            if( $user && Hash::check($data['password'], $user->user_password) ) {
-                $token = $user->createToken('admin')->accessToken;
-                $user->token = $token;
-                return $user;
+            $admin = AdminPortal::whereUsername($data['username'])->first();
+            if( $admin && Hash::check($data['password'], $admin->user_password) ) {
+                $tokenResult = $admin->createToken('admin');
+                $tokenResult->token->expires_at = now()->addHours(config('auth.token_expiration.admin'));
+                $tokenResult->token->save();
+                $admin->token = $tokenResult->accessToken;
+                return $admin;
             }
             return null;
         } catch (\Exception $exception ) {

@@ -131,5 +131,9 @@ return [
     */
 
     'password_timeout' => 10800,
+    'token_expiration' => [
+        'corp_customer' => env('CORP_CUSTOMER_TOKEN_EXPIRATION', 2),
+        'admin' => env('ADMIN_TOKEN_EXPIRATION', 2),
+    ],
 
 ];

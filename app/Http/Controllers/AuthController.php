@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CorCustomerLoginRequest;
 use App\Http\Requests\StoreCorpCustomerAccountRequest;
+use App\Http\Requests\StoreCorporateAccountRequest;
 use App\Http\Resources\CorporateUserRegisterResource;
 use App\Http\Resources\OtpGenrateResource;
 use App\Models\CorpCustomerAccount;
@@ -25,7 +26,7 @@ class AuthController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function register(StoreCorpCustomerAccountRequest $request)
+    public function register(StoreCorporateAccountRequest $request)
     {
         try {
             return (CorporateUserRegisterResource::make($this->authRepository->register($request->all()))

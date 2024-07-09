@@ -5,6 +5,7 @@ namespace App\Providers;
 // use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Laravel\Passport\Passport;
+use Illuminate\Support\Facades\Route;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -32,8 +33,11 @@ class AuthServiceProvider extends ServiceProvider
         Passport::setDefaultScope([
             'users',
         ]);*/
-        Passport::tokensExpireIn(now()->addDays(15));
-        Passport::refreshTokensExpireIn(now()->addDays(30));
-        Passport::personalAccessTokensExpireIn(now()->addMonths(6));
+        $this->registerPolicies();
+
+        Passport::tokensExpireIn(now()->addMinutes(config('auth.token_expiration.corp_customer')));
+        Passport::tokensExpireIn(now()->addMinutes(config('auth.token_expiration.admin')));
+        Passport::refreshTokensExpireIn(now()->addMinutes(config('auth.token_expiration.corp_customer')));
+        Passport::personalAccessTokensExpireIn(now()->addMinutes(config('auth.token_expiration.corp_customer')));
     }
 }
