@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\CorpCustomerAccount;
+use App\Models\CorpSubscriber;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -29,6 +30,7 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
         Route::model('customer_account_id', CorpCustomerAccount::class);
+        Route::model('corp_subscriber_id', CorpSubscriber::class);
         $this->routes(function () {
             Route::middleware('api')
                 ->prefix('api')

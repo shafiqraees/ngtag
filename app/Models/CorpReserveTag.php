@@ -13,4 +13,8 @@ class CorpReserveTag extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    public function corpTagList() {
+        return $this->belongsTo(CorpTagList::class,'corp_tag_list_id');
+    }
 }

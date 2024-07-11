@@ -42,7 +42,7 @@ class CorpCustomerAccount extends Model
     {
         return $this->getKey();
     }
-    public function reservedTag() {
-        return $this->hasMany(ReservedTag::class,'corp_customer_account_id','id');
+    public function corpReserveTag() {
+        return $this->hasMany(CorpReserveTag::class,'corp_customer_account_id','id');
     }
 }
