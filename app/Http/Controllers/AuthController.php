@@ -13,6 +13,7 @@ use App\Repositories\OtpProcessRepository;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -42,6 +43,10 @@ class AuthController extends Controller
      */
     public function login(CorCustomerLoginRequest $request)
     {
+        Log::info('POST request received', [
+            'headers' => $request->headers->all(),
+            'body' => $request->all()
+        ]);
         try {
             $user = $this->authRepository->login($request->all());
             if ($user) {
