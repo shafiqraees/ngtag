@@ -19,6 +19,8 @@ return [
     'name' => env('APP_NAME', 'Laravel'),
     'default_password' => env('DEFAULT_PASSWORD', 'Pa$$word123'),
     'check_login_attempt' => env('CHECK_LOGIN_ATTEMPT', '3'),
+    'reserve_number_expiry_date' => env('RESERVE_NUMBER_EXPIRY_DATE', '2'),
+    'reserve_number_next_charge_date' => env('RESERVE_NUMBER_NEXT_CHARGE_DATE', '2'),
 
     /*
     |--------------------------------------------------------------------------

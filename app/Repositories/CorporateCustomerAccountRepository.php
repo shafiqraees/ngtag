@@ -2,12 +2,15 @@
 
 namespace App\Repositories;
 
+use App\Enums\CorpCustomerAccountDocumentStatusEnum;
 use App\Enums\CorpCustomerAccountStatusEnum;
+use App\Enums\CorpReserveTagPaymentStatusEnum;
 use App\Enums\CorpReserveTagStatusEnum;
 use App\Filters\QueryFilterBase;
 use App\Models\AdminPortal;
 use App\Models\CorpCustomerAccount;
 use App\Models\CorpReserveTag;
+use App\Models\CorpSubscriber;
 use App\Models\CorpTagList;
 use App\Traits\FilesTrait;
 use App\Traits\StorageTrait;
@@ -52,12 +55,10 @@ class CorporateCustomerAccountRepository
             $account->comp_addr = $data['comp_addr'] ?? $account->comp_addr;
             $account->comp_reg_no = $data['comp_reg_no'] ?? $account->comp_reg_no;
             $account->website = $data['website'] ?? $account->website;
-            $account->website = $data['website'] ?? $account->website;
             $account->contact_fname = $data['contactf_name'] ?? $account->contact_fname;
             $account->contact_lname = $data['contactl_name'] ?? $account->contact_lname;
             $account->contact_no = $data['contact_no'] ?? $account->contact_no;
             $account->email = $data['email'] ?? $account->email;
-            $account->ntn = $data['ntn'] ?? $account->ntn;
             $account->ntn = $data['ntn'] ?? $account->ntn;
             $account->comp_logo_file_name = $comp_logo_file_name ?? $account->comp_logo_file_name;
             $account->comp_doc_name1 = $file_stored ?? $account->comp_doc_name1;
@@ -74,12 +75,12 @@ class CorporateCustomerAccountRepository
             $account->username = $data['username'] ?? $account->username;
             $account->password = isset($data['password']) ? Hash::make($data['password']) : $account->password;
             $account->passwd_change_date = isset($data['password']) ? Carbon::now() : $account->passwd_change_date;
-            $account->passwd_change_date = isset($data['password']) ? Carbon::now() : $account->passwd_change_date;
             $account->user_lang = $data['user_lang'] ?? $account->user_lang;
             $account->channel = $data['channel'] ?? $account->channel;
             $account->status = $data['status'] ?? $account->status;
-            $account->status = $data['status'] ?? $account->status;
-            $account->status_update_date = isset($data['password']) ? Carbon::now() : $account->status_update_date;
+            if ($account->isDirty('status')) {
+                $account->status_update_date = Carbon::now();
+            }
             $account->save();
             return $account;
         } catch (\Exception $exception ) {
@@ -107,14 +108,43 @@ class CorporateCustomerAccountRepository
                 'corp_tag_list_id' => $data['customer_tag_id'],
                 'payment_method' => $data['payment_method'] ?? null,
                 'payment_status' => $data['payment_method'] ? 1 : 0, //0=pending for payment, 1=payment success, 2=Payment Failed, 3=expired payment timeline
-                'payment_date' => isset($data['payment_method']) ?Carbon::now() : null ,
-                'expiry_date' => Carbon::now()->addHours(24) ?? null,
+                'payment_date' => isset($data['payment_method']) ? Carbon::now() : null ,
+                'expiry_date' => config('app.reserve_number_expiry_date') ??Carbon::now()->addHours(2),
                 'status' => $status, //0=reserve due to documents, 2=buy, 1=active, 3=pending for payment, 4=expired_docs, 5=expired_payment, 6= blockby admin
                 //'status_update_date' => $data['comp_addr'] ?? null,
             ]);
             $corp_tag_list = CorpTagList::find($data['customer_tag_id']);
             $corp_tag_list->status = 3; //1=available, 2=sold, 3=reserved, 4=
             $corp_tag_list->save();
+            if ($cor_account->status == CorpCustomerAccountStatusEnum::APPROVED->value
+                && $cor_account->doc_approval_status == CorpCustomerAccountDocumentStatusEnum::APPROVED->value
+                && $corp_rserve_buy_tags->payment_status == CorpReserveTagPaymentStatusEnum::PAYMENT_SUCCESS->value
+            ) {
+                $Corp_Subscriber = CorpSubscriber::where('account_id',$cor_account->id)
+                    ->where('tag_id',$corp_rserve_buy_tags->id)->first() ?? new CorpSubscriber();
+                $Corp_Subscriber->account_id = $cor_account->id;
+                $Corp_Subscriber->tag_id = $corp_rserve_buy_tags->id;
+                $Corp_Subscriber->msisdn = $Corp_Subscriber->msisdn ?? $corp_rserve_buy_tags->msisdn ?? $corp_rserve_buy_tags->phone_number;
+                $Corp_Subscriber->name_tag = $Corp_Subscriber->name_tag ?? $corp_tag_list->tag_name;
+                $Corp_Subscriber->tag_no = $Corp_Subscriber->tag_no ?? $corp_tag_list->tag_no;
+                $Corp_Subscriber->tag_type = $Corp_Subscriber->tag_type ?? $corp_tag_list->tag_type;
+                $Corp_Subscriber->tag_length = $Corp_Subscriber->tag_length ?? $corp_tag_list->tag_digits;
+                $Corp_Subscriber->tag_no_price = $Corp_Subscriber->tag_no_price ?? $corp_tag_list->tag_price;
+                $Corp_Subscriber->payment_method = $corp_rserve_buy_tags->payment_method ?? $Corp_Subscriber->payment_method;
+                $Corp_Subscriber->payment_status = $corp_rserve_buy_tags->payment_status ?? $Corp_Subscriber->payment_status;
+                $Corp_Subscriber->payment_date = $corp_rserve_buy_tags->payment_date ?? $Corp_Subscriber->payment_date;
+                $Corp_Subscriber->expiry_date = $corp_rserve_buy_tags->expiry_date ?? $Corp_Subscriber->expiry_date ?? config('app.reserve_number_expiry_date');
+                $Corp_Subscriber->service_fee = $corp_tag_list->service_fee ?? $Corp_Subscriber->service_fee;
+                $Corp_Subscriber->sub_date = $corp_rserve_buy_tags->created_date ?? $Corp_Subscriber->sub_date;
+                $Corp_Subscriber->sub_date = $corp_rserve_buy_tags->created_date ?? $Corp_Subscriber->sub_date ?? Carbon::now();
+                $Corp_Subscriber->charge_dt = $corp_rserve_buy_tags->payment_date ?? $Corp_Subscriber->charge_dt ?? Carbon::now();
+                $Corp_Subscriber->next_charge_dt = $Corp_Subscriber->next_charge_dt ?? config('app.reserve_number_next_charge_date');
+                $Corp_Subscriber->status = $corp_rserve_buy_tags->status ?? $Corp_Subscriber->status;
+                if ($Corp_Subscriber->isDirty('status')) {
+                    $Corp_Subscriber->status_update_date = Carbon::now();
+                }
+                $Corp_Subscriber->save();
+            }
             DB::commit();
             return $corp_rserve_buy_tags;
         } catch (\Exception $exception ) {
