@@ -18,7 +18,7 @@ Route::middleware([/*'auth:token','throttle:10,1'*/])->group(function () {
         Route::post('login', [AuthController::class, 'login']);
         Route::post('very/accounts', [AuthController::class, 'verifyAccounts']);
     });
-    Route::middleware('auth:corp_customer_accounts')->group(function (){
+    Route::middleware(/*'auth:corp_customer_accounts'*/)->group(function (){
         Route::apiResources([
             'corptaglist' => CorpTagListController::class,
             'voicemail' => VoiceMailController::class,
