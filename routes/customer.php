@@ -17,6 +17,7 @@ Route::middleware([/*'auth:token','throttle:10,1'*/])->group(function () {
         Route::post('register', [AuthController::class, 'register']);
         Route::post('login', [AuthController::class, 'login']);
         Route::post('very/accounts', [AuthController::class, 'verifyAccounts']);
+        Route::post('verify/accounts', [AuthController::class, 'verifyAccounts']);
     });
     Route::middleware([/*'auth:corp_customer_accounts'*/])->group(function (){
         Route::apiResources([
