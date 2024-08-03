@@ -20,6 +20,7 @@ class OtpVerifyResource extends JsonResource
             'otp_type' => $this->when($this->otp_type,$this->otp_type),
             'channel' => $this->when($this->channel,$this->channel),
             'status' => $this->when($this->status,$this->status),
+            'otp_code' => $this->when($this->otp_code,$this->otp_code),
             'expiration_time' => $this->when($this->expiration_time,$this->expiration_time),
         ];
     }

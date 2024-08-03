@@ -109,7 +109,7 @@ class CorporateCustomerAccountRepository
                 'payment_method' => $data['payment_method'] ?? null,
                 'payment_status' => $data['payment_method'] ? 1 : 0, //0=pending for payment, 1=payment success, 2=Payment Failed, 3=expired payment timeline
                 'payment_date' => isset($data['payment_method']) ? Carbon::now() : null ,
-                'expiry_date' => config('app.reserve_number_expiry_date') ??Carbon::now()->addHours(2),
+                'expiry_date' => Carbon::now()->addHours(config('app.reserve_number_expiry_date')) ?? Carbon::now()->addHours(2),
                 'status' => $status, //0=reserve due to documents, 2=buy, 1=active, 3=pending for payment, 4=expired_docs, 5=expired_payment, 6= blockby admin
                 //'status_update_date' => $data['comp_addr'] ?? null,
             ]);
@@ -133,12 +133,12 @@ class CorporateCustomerAccountRepository
                 $Corp_Subscriber->payment_method = $corp_rserve_buy_tags->payment_method ?? $Corp_Subscriber->payment_method;
                 $Corp_Subscriber->payment_status = $corp_rserve_buy_tags->payment_status ?? $Corp_Subscriber->payment_status;
                 $Corp_Subscriber->payment_date = $corp_rserve_buy_tags->payment_date ?? $Corp_Subscriber->payment_date;
-                $Corp_Subscriber->expiry_date = $corp_rserve_buy_tags->expiry_date ?? $Corp_Subscriber->expiry_date ?? config('app.reserve_number_expiry_date');
+                $Corp_Subscriber->expiry_date = $corp_rserve_buy_tags->expiry_date ?? $Corp_Subscriber->expiry_date ?? Carbon::now()->addHours(config('app.reserve_number_expiry_date'));
                 $Corp_Subscriber->service_fee = $corp_tag_list->service_fee ?? $Corp_Subscriber->service_fee;
                 $Corp_Subscriber->sub_date = $corp_rserve_buy_tags->created_date ?? $Corp_Subscriber->sub_date;
                 $Corp_Subscriber->sub_date = $corp_rserve_buy_tags->created_date ?? $Corp_Subscriber->sub_date ?? Carbon::now();
                 $Corp_Subscriber->charge_dt = $corp_rserve_buy_tags->payment_date ?? $Corp_Subscriber->charge_dt ?? Carbon::now();
-                $Corp_Subscriber->next_charge_dt = $Corp_Subscriber->next_charge_dt ?? config('app.reserve_number_next_charge_date');
+                $Corp_Subscriber->next_charge_dt = $Corp_Subscriber->next_charge_dt ?? Carbon::now()->addHours(config('app.reserve_number_next_charge_date')) ;
                 $Corp_Subscriber->status = $corp_rserve_buy_tags->status ?? $Corp_Subscriber->status;
                 if ($Corp_Subscriber->isDirty('status')) {
                     $Corp_Subscriber->status_update_date = Carbon::now();

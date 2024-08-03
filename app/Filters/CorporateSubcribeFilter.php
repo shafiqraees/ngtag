@@ -32,6 +32,10 @@ class CorporateSubcribeFilter extends QueryFilterBase
     public function tag_type($term){
         return $this->builder->where('tag_type', $term);
     }
+
+    public function account_id($term){
+        return $this->builder->where('account_id', $term);
+    }
     public function tag_digits($term){
         return $this->builder->where('tag_digits', $term);
     }
