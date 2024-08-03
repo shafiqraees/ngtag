@@ -43,10 +43,6 @@ class AuthController extends Controller
      */
     public function login(CorCustomerLoginRequest $request)
     {
-        Log::info('POST request received', [
-            'headers' => $request->headers->all(),
-            'body' => $request->all()
-        ]);
         try {
             $user = $this->authRepository->login($request->all());
             if ($user) {
