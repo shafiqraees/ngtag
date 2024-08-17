@@ -40,6 +40,7 @@ return new class extends Migration
             $table->tinyInteger('status')->default(0)->comment('0= pending for payment, 1=active,2=pending for doc approval,3=unsub,4=churn out monthly fee pending,5= block,6=expired');
             $table->dateTime('status_update_date')->nullable()->comment('last status change date');
             $table->tinyInteger('service_id')->default(30)->comment('7=weekly, 30=monthly');
+            $table->boolean('service_status')->default(1)->comment("Service can be activated or Deactivated");
 
             //$table->primary('id');
             $table->index('msisdn', 'idx_corp_customer_account');

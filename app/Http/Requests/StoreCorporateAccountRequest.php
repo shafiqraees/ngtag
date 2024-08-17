@@ -41,7 +41,7 @@ class StoreCorporateAccountRequest extends FormRequest
             'contactf_name' => 'nullable|string',
             'contactl_name' => 'nullable|string',
             'email' => 'nullable|sometimes|email|unique:corp_customer_accounts,email',
-            'contact_no' => 'nullable|numeric',
+            'contact_no' => 'nullable|string',
             'other_info' => 'nullable|string',
             'document_name1' => 'nullable|string',
             'document_file_name1' => 'nullable|string',

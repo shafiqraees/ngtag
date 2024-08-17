@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Filters\CorporateReservedTagFilter;
 use App\Http\Requests\StoreCorpCustomerAccountRequest;
 use App\Http\Requests\StoreCorpTagListRequest;
 use App\Http\Requests\UpdateCorpCustomerAccountRequest;
@@ -29,6 +30,16 @@ class CorpCustomerAccountController extends Controller
     {
         try {
             return (CorporateUserRegisterResource::make($this->corporateCustomerAccountRepository->buyOrReserveTagNumber($request->all()))
+                ->additional(['response_status' => "success", 'response_code' => "00",'success' => true,'message' => 'You have successfully reserve number']));
+        } catch (\Exception $exception) {
+            report($exception);
+            return $this->apiResponse('error',JsonResponse::HTTP_INTERNAL_SERVER_ERROR,false,$exception->getMessage(), 'data', null);
+        }
+    }
+    public function reserveTagList(CorpCustomerAccount $customer_account_id,CorporateReservedTagFilter $filter)
+    {
+        try {
+            return (CorporateUserRegisterResource::make($this->corporateCustomerAccountRepository->reserveTagList($customer_account_id,$filter))
                 ->additional(['response_status' => "success", 'response_code' => "00",'success' => true,'message' => 'You have successfully reserve number']));
         } catch (\Exception $exception) {
             report($exception);

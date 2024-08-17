@@ -46,7 +46,7 @@ class StoreCorpTagListRequest extends FormRequest
                     return $query->where('status', 1);
                 }),
             ],
-            'msisdn' => 'required|string',
+            'msisdn' => 'required|string|unique:corp_subscribers,msisdn',
             'reserve_type' => 'required|string',
         ];
     }

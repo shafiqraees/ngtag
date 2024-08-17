@@ -28,6 +28,7 @@ Route::middleware([/*'auth:token','throttle:10,1'*/])->group(function () {
         Route::get('check-documents/{customer_account_id}', [CorpCustomerAccountController::class, 'checkDocumentsVerification']);
         Route::put('updatecustomer/{customer_account_id}', [CorpCustomerAccountController::class, 'update']);
         Route::post('buy/tags', [CorpCustomerAccountController::class, 'buyReserveTags']);
+        Route::get('reserve/tags/{customer_account_id}', [CorpCustomerAccountController::class, 'reserveTagList']);
         Route::get('tagnumber/detail/{tag_id}', [CorpCustomerAccountController::class, 'getTagDetail']);
     });
 });

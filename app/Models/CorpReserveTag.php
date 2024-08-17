@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\HasFilters;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class CorpReserveTag extends Model
 {
-    use HasFactory;
+    use HasFactory, HasFilters;
     protected $guarded = [];
     /**
      * @var bool

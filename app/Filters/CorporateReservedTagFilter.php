@@ -5,7 +5,7 @@ namespace App\Filters;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
-class VoiceMailFilter extends QueryFilterBase
+class CorporateReservedTagFilter extends QueryFilterBase
 {
     /**
      * @param Request $request
@@ -23,17 +23,23 @@ class VoiceMailFilter extends QueryFilterBase
     public function id($term){
         return $this->builder->where('id', $term);
     }
-    public function account_id($term){
+    public function corp_customer_account_id($term){
         return $this->builder->where('corp_customer_account_id', $term);
     }
     public function msisdn($term){
         return $this->builder->where('msisdn', $term);
     }
-    public function caller_no($term){
-        return $this->builder->where('caller_no', $term);
+    public function phone_number($term){
+        return $this->builder->where('phone_number', $term);
     }
-    public function user_type($term){
-        return $this->builder->where('user_type', $term);
+    public function corp_tag_list_id($term){
+        return $this->builder->where('corp_tag_list_id', $term);
+    }
+    public function payment_method($term){
+        return $this->builder->where('payment_method', $term);
+    }
+    public function payment_status($term){
+        return $this->builder->where('payment_status', $term);
     }
     public function status($term){
         return $this->builder->where('status', $term);
@@ -47,12 +53,10 @@ class VoiceMailFilter extends QueryFilterBase
     public function search($term) {
         return $this->builder->where(function($query) use($term){
             $query->where('id', 'LIKE', "%$term%")
-                ->OrWhere('tag_name', 'LIKE', "%$term%")
-                ->OrWhere('tag_no', 'LIKE', "%$term%")
-                ->OrWhere('tag_type', 'LIKE', "%$term%")
-                ->OrWhere('tag_price', 'LIKE', "%$term%")
-                ->OrWhere('service_fee', 'LIKE', "%$term%")
-                ->OrWhere('status', 'LIKE', "%$term%");
+                ->OrWhere('corp_customer_account_id', 'LIKE', "%$term%")
+                ->OrWhere('phone_number', 'LIKE', "%$term%")
+                ->OrWhere('msisdn', 'LIKE', "%$term%")
+                ->OrWhere('corp_tag_list_id', 'LIKE', "%$term%");
         });
     }
 }

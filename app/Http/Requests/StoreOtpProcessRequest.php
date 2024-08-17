@@ -73,4 +73,31 @@ class StoreOtpProcessRequest extends FormRequest
         }
         return $errStrFinal;
     }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'msisdn.required' => 'is required',
+            'otp_type.required' => 'is required',
+        ];
+    }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'msisdn' => 'Phone number',
+            'otp_type' => 'OTP type like(MSM/Email)',
+        ];
+    }
 }
+

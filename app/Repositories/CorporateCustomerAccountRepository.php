@@ -140,6 +140,7 @@ class CorporateCustomerAccountRepository
                 $Corp_Subscriber->charge_dt = $corp_rserve_buy_tags->payment_date ?? $Corp_Subscriber->charge_dt ?? Carbon::now();
                 $Corp_Subscriber->next_charge_dt = $Corp_Subscriber->next_charge_dt ?? Carbon::now()->addHours(config('app.reserve_number_next_charge_date')) ;
                 $Corp_Subscriber->status = $corp_rserve_buy_tags->status ?? $Corp_Subscriber->status;
+                $Corp_Subscriber->corp_subscriber_id = $Corp_Subscriber->corp_subscriber_id ?? Str::uuid()->toString();
                 if ($Corp_Subscriber->isDirty('status')) {
                     $Corp_Subscriber->status_update_date = Carbon::now();
                 }
@@ -195,7 +196,13 @@ class CorporateCustomerAccountRepository
         }
     }
 
-    public function getCorpCustomerAccount() {
-
+    public function reserveTagList(CorpCustomerAccount $customer_account_id,QueryFilterBase $filters = null) {
+        try {
+            $limit = request()->get('limit', config('cache.per_page'));
+            return CorpReserveTag::where('corp_customer_account_id',$customer_account_id->id)->filter($filters)->paginate($limit);
+        } catch (Throwable $exception) {
+            report($exception);
+            throw $exception;
+        }
     }
 }

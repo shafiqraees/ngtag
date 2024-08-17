@@ -55,6 +55,7 @@ class CorporateSubscriberRepository
             $account->incall_end_dt = $data['incall_end_dt'] ?? $account->incall_end_dt;
             $account->incall_start_dt = $data['incall_start_dt'] ?? $account->incall_start_dt;
             $account->voic_email = $data['voic_email'] ?? $account->voic_email;
+            $account->service_status = $data['service'] ?? $account->service_status;
             $account->save();
             return $account;
         } catch (\Exception $exception ) {
