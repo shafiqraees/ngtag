@@ -30,5 +30,6 @@ Route::middleware([/*'auth:token','throttle:10,1'*/])->group(function () {
         Route::post('buy/tags', [CorpCustomerAccountController::class, 'buyReserveTags']);
         Route::get('reserve/tags/{customer_account_id}', [CorpCustomerAccountController::class, 'reserveTagList']);
         Route::get('tagnumber/detail/{tag_id}', [CorpCustomerAccountController::class, 'getTagDetail']);
+        Route::get('unique-tag-digits', [CorpTagListController::class, 'getUniqueTagDigits']);
     });
 });

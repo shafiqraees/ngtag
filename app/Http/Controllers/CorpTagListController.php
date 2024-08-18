@@ -40,6 +40,16 @@ class CorpTagListController extends Controller
             return $this->apiErrorResponse($exception);
         }
     }
+    public function getUniqueTagDigits(CorporateTagFilter $filter)
+    {
+        try {
+            return (CorporateTagResource::collection($this->corporateTagRepository->getUniqueTagDigits($filter))
+                ->additional(['response_status' => "success", 'response_code' => "00",'success' => true]));
+        } catch (\Exception $exception) {
+            report($exception);
+            return $this->apiErrorResponse($exception);
+        }
+    }
 
     /**
      * Store a newly created resource in storage.

@@ -43,4 +43,27 @@ class CorporateTagRepository
             throw $exception;
         }
     }
+    public function getUniqueTagDigits(QueryFilterBase $filters = null)
+    {
+        try {
+            return CorpTagList::select('tag_digits', 'status', 'id')
+                ->orderBy('tag_digits','ASC')
+                ->groupBy('tag_digits')
+                ->get();
+            if (!empty($filters) && $filters->hasFilters()) {
+                return CorpTagList::paginate($limit);
+            }
+            $key = "{$this->cache_tag}";
+            if ($this->hasCache($this->cache_tag, $key)) {
+                return $this->getCache($this->cache_tag, $key);
+            } else {
+                $results = CorpTagList::filter($filters)->paginate($limit);
+                return $this->storeCache($this->cache_tag, $key, $results, config('cache.duration'));
+            }
+        } catch (Throwable $exception) {
+
+            report($exception);
+            throw $exception;
+        }
+    }
 }
