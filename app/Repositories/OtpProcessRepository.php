@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\OtpProcess;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 class OtpProcessRepository
 {
@@ -13,7 +14,7 @@ class OtpProcessRepository
      */
     public function generateOtp(array $data) {
         try {
-            $otp_code = rand(1000, 9999);
+            $otp_code = rand(config('app.min_random_number'), config('app.max_random_number'));
             //$otp_id = (int)(microtime(true) * 1000); // Generate a 10-digit sequence ID
             $otp_id = Str::uuid()->toString();; // Generate a 10-digit sequence ID
             return OtpProcess::create([
@@ -22,7 +23,7 @@ class OtpProcessRepository
                 'msisdn' => $data['msisdn'],
                 'otp_type' => $data['otp_type'],
                 'channel' => $data['channel'],
-                'expiration_time' => now()->addMinutes(5),
+                'expiration_time' => Carbon::now()->addMinutes(config('app.otp_expiry_time')) ?? Carbon::now()->addMinutes(2),
                 'status' => 0, // pending
             ]);
 

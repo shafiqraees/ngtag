@@ -178,7 +178,7 @@ class CorporateCustomerAccountRepository
         try {
 
             $limit = request()->get('limit', config('cache.per_page'));
-            return CorpCustomerAccount::paginate($limit);
+            return CorpCustomerAccount::filter($filters)->paginate($limit);
             if (!empty($filters) && $filters->hasFilters()) {
                 return CorpTagList::paginate($limit);
             }

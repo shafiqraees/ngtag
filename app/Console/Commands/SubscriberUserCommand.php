@@ -38,7 +38,6 @@ class SubscriberUserCommand extends Command
             $bar = $this->output->createProgressBar(count($users));
             $bar->start();
             foreach ($users as $user) {
-                //dd($user);
                 foreach ($user->corpReserveTag as $tag) {
                     CorpSubscriber::updateOrCreate(
                         [
@@ -71,7 +70,7 @@ class SubscriberUserCommand extends Command
             $bar->finish();
             return true;
         } catch (\Exception $exception) {
-            throw $exception;
+            report($exception);
         }
     }
 }

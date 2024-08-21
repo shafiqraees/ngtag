@@ -20,6 +20,9 @@ return [
     'default_password' => env('DEFAULT_PASSWORD', 'Pa$$word123'),
     'check_login_attempt' => env('CHECK_LOGIN_ATTEMPT', '3'),
     'reserve_number_expiry_date' => env('RESERVE_NUMBER_EXPIRY_DATE', '2'),
+    'otp_expiry_time' => env('OTP_EXPIRY_TIME', '2'),
+    'min_random_number' => env('MIN_RANDOM_NUMBER', '1000'),
+    'max_random_number' => env('MAX_RANDOM_NUMBER', '9999'),
     'reserve_number_next_charge_date' => env('RESERVE_NUMBER_NEXT_CHARGE_DATE', '2'),
 
     /*
